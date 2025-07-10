@@ -1,8 +1,8 @@
 package config
 
 import (
+	"flag"
 	"github.com/ilyakaznacheev/cleanenv"
-	"log"
 	"os"
 	"time"
 )
@@ -20,20 +20,38 @@ type GRPCConfig struct {
 }
 
 func MustLoad() *Config {
-	configPath := os.Getenv("CONFIG_PATH")
+	configPath := fetchConfigPath()
 	if configPath == "" {
-		log.Fatal("CONFIG_PATH is not set")
+		panic("config path is empty")
 	}
 
+	return MustLoadPath(configPath)
+}
+
+func MustLoadPath(configPath string) *Config {
+
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		log.Fatal("CONFIG_PATH does not exist")
+		panic("config file does not exist: " + configPath)
 	}
 
 	var cfg Config
 
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
-		log.Fatal(err)
+		panic("cannot read config: " + err.Error())
 	}
 
 	return &cfg
+}
+
+func fetchConfigPath() string {
+	var res string
+
+	flag.StringVar(&res, "config", "D:/go Projects/tuzov_micro/sso/config/local.yaml", "path to config file")
+	flag.Parse()
+
+	if res == "" {
+		res = os.Getenv("CONFIG_PATH")
+	}
+
+	return res
 }
