@@ -1,4 +1,4 @@
-module sso
+module github.com/weeweeshka/sso
 
 go 1.24.4
 
