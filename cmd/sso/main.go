@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/weeweeshka/sso/internal/app"
-	"github.com/weeweeshka/sso/internal/config"
 	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/weeweeshka/sso/internal/app"
+	"github.com/weeweeshka/sso/internal/config"
 )
 
 func main() {

@@ -6,4 +6,4 @@ tasks:
       - gen-mig
     desc: "generate migrations"
     cmds:
-      - go run ./cmd/migrator --storage-path=./storage.sso.db --migrations-path=./migrations
+      - go run ./cmd/migrator --storage-path=storage/storage.sso.db --migrations-path=./migrations

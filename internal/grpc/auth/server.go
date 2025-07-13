@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	ssov1 "github.com/weeweeshka/protos/gen/go/proto/sso"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -10,7 +11,7 @@ import (
 
 type Auth interface {
 	Login(ctx context.Context, email string, password string, appID int) (token string, err error)
-	RegisterNewUser(ctx context.Context, email string, password string) (int64, error)
+	Register(ctx context.Context, email string, password string) (int64, error)
 	IsAdmin(ctx context.Context, userID int64) (bool, error)
 }
 
@@ -19,7 +20,7 @@ type serverAPI struct {
 	auth Auth
 }
 
-func Register(gPRC *grpc.Server, auth Auth) {
+func RegisterServer(gPRC *grpc.Server, auth Auth) {
 	ssov1.RegisterAuthServer(gPRC, &serverAPI{auth: auth})
 }
 
@@ -43,7 +44,7 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 	return &ssov1.LoginResponse{Token: token}, nil
 }
 
-func (s *serverAPI) RegisterNewUser(ctx context.Context, req *ssov1.RegisterRequest) (*ssov1.RegisterResponse, error) {
+func (s *serverAPI) Register(ctx context.Context, req *ssov1.RegisterRequest) (*ssov1.RegisterResponse, error) {
 	if req.GetEmail() == "" {
 		return nil, status.Error(codes.InvalidArgument, "missing email")
 	}
@@ -52,7 +53,7 @@ func (s *serverAPI) RegisterNewUser(ctx context.Context, req *ssov1.RegisterRequ
 		return nil, status.Error(codes.InvalidArgument, "missing password")
 	}
 
-	userID, err := s.auth.RegisterNewUser(ctx, req.GetEmail(), req.GetPassword())
+	userID, err := s.auth.Register(ctx, req.GetEmail(), req.GetPassword())
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error")
 	}
