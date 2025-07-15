@@ -18,7 +18,6 @@ func main() {
 
 	application := app.New(cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL, slogger)
 	go application.GRPCServer.MustRun()
-
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 	slog.Info("Gracefully shutting down...")
@@ -30,6 +29,7 @@ func main() {
 
 func SetupLogger() *slog.Logger {
 	var log *slog.Logger
+
 	log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}))

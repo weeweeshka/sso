@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	Env         string        `yaml:"env" env-default:"local"`
-	StoragePath string        `yaml:"storage_path" env-required:"true"`
+	StoragePath string        `yaml:"storage_path" env-default:"D:/go Projects/tuzov_micro/sso/storage/storage.sso.db"`
 	TokenTTL    time.Duration `yaml:"token_ttl" env-default:"1h"`
 	GRPC        GRPCConfig    `yaml:"grpc"`
 }
